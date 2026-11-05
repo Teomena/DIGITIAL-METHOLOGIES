@@ -559,6 +559,43 @@
             line-height: 1.3;
         }
 
+        /* Participant ID (v2) */
+        .participant-input {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            width: 130px;
+            min-height: 44px;
+        }
+
+        /* Agreement button (v2) */
+        .btn-agree {
+            background-color: var(--bg-green);
+            border: 1px solid var(--color-green);
+            color: var(--color-green);
+            width: 100%;
+            font-weight: 800;
+        }
+
+        .btn-agree:hover {
+            background-color: rgba(34, 197, 94, 0.25);
+        }
+
+        .agreement-status {
+            background-color: var(--bg-green);
+            border: 1px solid var(--color-green);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 0.875rem;
+            color: var(--color-green);
+            font-weight: 600;
+        }
+
         /* Pulse Animation */
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -571,12 +608,14 @@
     </style>
 </head>
 <body>
-    <div class="simulated-badge">⚡ Datos simulados — Prototipo MVP</div>
+    <div class="simulated-badge">⚡ Datos simulados — Prototipo MVP · Umbrales de carga no validados clínicamente</div>
 
     <header class="app-header">
         <div class="header-content">
             <h1>SPORTRACK</h1>
             <div class="header-actions">
+                <input id="participantIdInput" class="participant-input" type="text" placeholder="ID participante" maxlength="12" />
+                <button id="setParticipantBtn" class="btn btn-secondary">Iniciar sesión de prueba</button>
                 <button id="downloadCsvBtn" class="btn btn-secondary">📥 Descargar Registro CSV</button>
             </div>
         </div>
@@ -584,23 +623,23 @@
 
     <main class="app-main">
         <section class="preset-section" style="margin-bottom: 24px;">
-            <h2 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 12px;">⚡ Escenario de Simulación</h2>
+            <h2 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 12px;">Semana cargada</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
                 <button class="btn-preset active" id="btn-preset1" onclick="selectPreset('preset1')">
-                    <strong>Semana Normal</strong>
-                    <small>Plantel equilibrado, cargas óptimas</small>
+                    <strong>Escenario 1</strong>
+                    <small>Semana sin partido previo</small>
                 </button>
                 <button class="btn-preset" id="btn-preset2" onclick="selectPreset('preset2')">
-                    <strong>Alta Carga</strong>
-                    <small>Acumulación de fatiga, probar 🔴 override</small>
+                    <strong>Escenario 2</strong>
+                    <small>Tercera semana consecutiva de trabajo</small>
                 </button>
                 <button class="btn-preset" id="btn-preset3" onclick="selectPreset('preset3')">
-                    <strong>Post Partido</strong>
-                    <small>Lunes post competencia, predominio 🟡</small>
+                    <strong>Escenario 3</strong>
+                    <small>Lunes posterior a partido</small>
                 </button>
                 <button class="btn-preset" id="btn-preset4" onclick="selectPreset('preset4')">
-                    <strong>Conmoción</strong>
-                    <small>Jugador con protocolo activo 🔒</small>
+                    <strong>Escenario 4</strong>
+                    <small>Semana con parte médico cargado</small>
                 </button>
             </div>
         </section>
@@ -802,7 +841,9 @@
             currentPreset: 'preset1',
             filters: { state: 'all', position: 'all' },
             selectedPlayerId: null,
-            overrides: {} // { playerId: { targetLight, targetText, category, note, timestamp } }
+            overrides: {}, // { playerId: { targetLight, targetText, category, note, timestamp } }
+            agreements: {}, // v2: { playerId: { light, text, timestamp } } — el acuerdo se registra, no se infiere del silencio
+            participantId: ''
         };
 
         function initData() {
@@ -835,7 +876,8 @@
         function changePreset(presetId) {
             state.currentPreset = presetId;
             state.overrides = {}; // Clear overrides on preset change
-            logAction('change_preset', 'System', `Cambiado a ${presetId}`);
+            state.agreements = {};
+            logAction('change_preset', 'System', 'System', `Cambiado a ${presetId}`);
             initData();
         }
 
@@ -849,6 +891,12 @@
                 if(state.overrides[playerId]) {
                     delete state.overrides[playerId];
                     logAction('reset_override', player.id, player.name, `Override eliminado por cambio de factor: ${factor}`);
+                }
+
+                // v2: el acuerdo previo deja de ser válido si cambian los factores
+                if(state.agreements[playerId]) {
+                    delete state.agreements[playerId];
+                    logAction('reset_agreement', player.id, player.name, `Acuerdo eliminado por cambio de factor: ${factor}`);
                 }
                 
                 // Recalculate
@@ -874,6 +922,8 @@
             const player = state.players.find(p => p.id === playerId);
             if(!player || player.systemRec.isProtected) return;
 
+            delete state.agreements[playerId]; // v2: override y acuerdo son mutuamente excluyentes
+
             state.overrides[playerId] = {
                 targetLight,
                 targetText,
@@ -889,8 +939,26 @@
                 isOverride: true
             };
 
-            logAction('override', player.id, player.name, `Sist: ${player.systemRec.light} -> PF: ${targetLight}. Cat: ${category}`);
-            
+            logAction('override', player.id, player.name, `Sist: ${player.systemRec.light} -> PF: ${targetLight}. Cat: ${category || 'sin categoría'}`);
+
+            closeModal();
+            render();
+        }
+
+        // v2: registra el acuerdo con la misma fricción que el desacuerdo (1 clic).
+        // Antes el acuerdo se infería de la ausencia de override: silencio != acuerdo.
+        function saveAgreement(playerId) {
+            const player = state.players.find(p => p.id === playerId);
+            if(!player) return;
+
+            state.agreements[playerId] = {
+                light: player.systemRec.light,
+                text: player.systemRec.text,
+                timestamp: new Date().toISOString()
+            };
+
+            logAction('apply_recommendation', player.id, player.name, `Aplica recomendación del sistema: ${player.systemRec.light} / ${player.systemRec.text}`);
+
             closeModal();
             render();
         }
@@ -959,6 +1027,7 @@
                         <div class="player-metrics" style="margin-top: 8px;">
                             <span class="badge">Carga: ${p.load} (${LOAD_UA_MAP[p.load]})</span>
                             ${state.overrides[p.id] ? `<span class="badge badge-override">PF Override Activo</span>` : ''}
+                            ${state.agreements[p.id] ? `<span class="badge">✓ Recomendación aplicada</span>` : ''}
                         </div>
                     </div>
                     <div class="player-action">
@@ -993,6 +1062,7 @@
 
             const isProtected = player.systemRec.isProtected;
             const hasOverride = !!state.overrides[player.id];
+            const hasAgreement = !!state.agreements[player.id];
 
             container.innerHTML = `
                 <div class="modal-header">
@@ -1045,7 +1115,18 @@
                             <span class="recommendation-pill pill-${player.systemRec.light}">SISTEMA: ${player.systemRec.text}</span>
                         </div>
                         <p class="explanation">${player.systemRec.explanation}</p>
+                        <p class="explanation" style="font-style: italic; opacity: 0.8;">Umbral no validado clínicamente. Es una sugerencia, no una indicación médica.</p>
                     </div>
+
+                    ${hasAgreement ? `
+                        <div class="agreement-status">
+                            ✓ Aplicaste esta recomendación (${state.agreements[player.id].text})
+                        </div>
+                    ` : `
+                        <div style="margin-top: 16px;">
+                            <button class="btn btn-agree" onclick="saveAgreement('${player.id}')">✓ Aplico esta recomendación</button>
+                        </div>
+                    `}
 
                     ${hasOverride ? `
                         <div class="override-status">
@@ -1082,7 +1163,7 @@
                                     </select>
                                 </div>
                                 <div class="factor-control">
-                                    <label>Categoría del Cambio (Requerido)</label>
+                                    <label>Categoría del Cambio (Opcional)</label>
                                     <select id="or_cat">
                                         <option value="">-- Seleccionar motivo --</option>
                                         <option value="Observación directa">Observación directa del jugador</option>
@@ -1114,11 +1195,9 @@
         }
 
         function submitOverride(playerId) {
+            // v2: la categoría pasa a ser opcional. Antes era obligatoria y encarecía
+            // el desacuerdo frente al acuerdo, que no costaba ningún clic.
             const cat = document.getElementById('or_cat').value;
-            if(!cat) {
-                alert("Debe seleccionar una categoría para el cambio.");
-                return;
-            }
             const recVal = document.getElementById('or_rec').value.split('|');
             const note = document.getElementById('or_note').value;
             
@@ -1132,15 +1211,37 @@
         function logAction(actionType, playerId, playerName, details) {
             const logEntry = {
                 timestamp: new Date().toISOString(),
+                participant_id: state.participantId || 'SIN_ID',
+                preset: state.currentPreset,
                 player_id: playerId || 'N/A',
                 player_name: playerName || 'N/A',
                 action: actionType,
-                details: details
+                details: details || ''
             };
-            
+
             let logs = JSON.parse(localStorage.getItem('sportrack_logs') || '[]');
             logs.push(logEntry);
             localStorage.setItem('sportrack_logs', JSON.stringify(logs));
+        }
+
+        // v2: un participante por sesión. Antes todos los logs se mezclaban en el
+        // mismo localStorage y una sola persona podía parecer varias.
+        function startParticipantSession() {
+            const input = document.getElementById('participantIdInput');
+            const id = input.value.trim();
+            if(!id) {
+                alert("Ingresá el ID del participante (P01, P02, ...) antes de empezar.");
+                return;
+            }
+            if(state.participantId && state.participantId !== id) {
+                if(!confirm(`Hay una sesión abierta de ${state.participantId}. Descargá su CSV antes de continuar. ¿Iniciar la sesión de ${id} y limpiar el registro?`)) return;
+            }
+            localStorage.removeItem('sportrack_logs');
+            state.participantId = id;
+            state.overrides = {};
+            state.agreements = {};
+            logAction('session_start', 'System', 'System', `Sesión iniciada para ${id}`);
+            initData();
         }
 
         function downloadCSV() {
@@ -1150,22 +1251,24 @@
                 return;
             }
 
-            const headers = ['Timestamp', 'Player ID', 'Player Name', 'Action', 'Details'];
+            const headers = ['Timestamp', 'Participant ID', 'Escenario', 'Player ID', 'Player Name', 'Action', 'Details'];
             const rows = logs.map(l => [
                 l.timestamp,
+                l.participant_id || 'SIN_ID',
+                l.preset || 'N/A',
                 l.player_id,
                 l.player_name,
                 l.action,
-                `"${l.details.replace(/"/g, '""')}"` // Escape quotes
+                `"${String(l.details || '').replace(/"/g, '""')}"` // Escape quotes
             ]);
 
             const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-            
+
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.setAttribute("href", url);
-            link.setAttribute("download", `sportrack_logs_${new Date().getTime()}.csv`);
+            link.setAttribute("download", `sportrack_logs_${state.participantId || 'SIN_ID'}_${new Date().getTime()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -1196,6 +1299,8 @@
 
         document.getElementById('downloadCsvBtn').addEventListener('click', downloadCSV);
 
+        document.getElementById('setParticipantBtn').addEventListener('click', startParticipantSession);
+
         // Close modal on click outside
         document.getElementById('playerModal').addEventListener('click', (e) => {
             if(e.target === document.getElementById('playerModal')) {
@@ -1206,7 +1311,9 @@
         // Initialize App
         window.onload = () => {
             initData();
-            logAction('app_init', 'System', 'System', 'Aplicación iniciada');
+            // v2: 'page_load' no equivale a uso. El uso se mide por view_detail,
+            // apply_recommendation y override, no por cargar la página.
+            logAction('page_load', 'System', 'System', 'Página cargada (no cuenta como uso)');
         };
 
     </script>
