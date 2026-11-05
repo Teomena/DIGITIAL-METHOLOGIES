@@ -76,9 +76,9 @@ está ahí. Separarlas cambia qué hay que hacer con cada una:
 
 **Por qué importa la distinción:** "supuesto informado" y "supuesto de contexto sin fuente"
 cuestan muy distinto de validar. C1 se resuelve con un dato público; I2 necesita una
-conversación real. Tratarlos como un bloque único de 60 % nos impediría priorizar.
+conversación real. Tratarlos como un bloque único de 58 % nos impediría priorizar.
 
-Lo que **no** cambia la distinción: ninguna de las doce puede sostener hoy una afirmación
+Lo que **no** cambia la distinción: ninguna de las once puede sostener hoy una afirmación
 sobre conducta. Siguen todas en rojo.
 
 ### 1.4 Nuestra decisión más apoyada en amarillo o rojo
@@ -263,7 +263,7 @@ Segundo, casi empatado: cuando el PF está de acuerdo con el sistema, el MVP no 
 
 | Qué hizo la IA | Qué decidió el equipo |
 |---|---|
-| Clasificó las 20 piezas de evidencia citando sección de origen | Revisamos cada color. Discutimos I3, I4, I8 y M5 (quedaron amarillas, no verdes) y aceptamos que I6 era rojo pese a sonar a conducta observada |
+| Clasificó las 19 piezas de evidencia citando sección de origen | Revisamos cada color. Discutimos I3, I4, I8 y M5 (quedaron amarillas, no verdes) y aceptamos que I6 era rojo pese a sonar a conducta observada |
 | Listó 12 empujones del `index.html` con número de línea | Verificamos las líneas en el repo. Decidimos nosotros queda / sale / se declara en las 12 filas |
 | Señaló 4 evidencias en contra ausentes de §4 | Las aceptamos todas. La de I10 vs. Pata B es la que más nos costó |
 | Marcó que la señal de las dos hipótesis es autorreporte | Confirmamos. **No cambiamos el criterio**: agregamos triangulación en el protocolo |
