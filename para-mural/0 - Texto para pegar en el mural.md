@@ -8,21 +8,27 @@ El detalle completo está en los 3 PDF adjuntos.
 ## TÍTULO DEL MURAL
 
 **SPORTRACK — Auditoría de sesgos del MVP**
-Equipo: [Completar nombres] · Noviembre 2025
+Equipo: [Completar nombres] · Noviembre 2026
 Hipótesis y criterio: sin cambios. Lo que cambió es el MVP y cómo medimos.
 
 ---
 
 ## 1. SEMÁFORO DE EVIDENCIA
 
-**20 piezas clasificadas**
+**19 piezas clasificadas**
 
-- 🟢 Verde (hicimos / conducta observada): **20 %** — 4 piezas, todas datos de mercado
-- 🟡 Amarillo (nos dijeron): **20 %** — 4 piezas
-- 🔴 Rojo (supusimos): **60 %** — 12 piezas
+- 🟢 Verde (hicimos / conducta observada): **21 %** — 4 piezas, todas datos de mercado
+- 🟡 Amarillo (nos dijeron): **21 %** — 4 piezas
+- 🔴 Rojo (supusimos): **58 %** — 11 piezas
 
 **Conducta de usuario observada: 0 %.**
-Las 11 evidencias de usuario (I1-I11) salen de entrevistas simuladas.
+Las 11 evidencias de usuario (I1-I11) salen de entrevistas simuladas —
+método habilitado por la consigna, no un atajo. La limitación no es cómo
+las obtuvimos, sino hasta dónde llegan: no alcanzan para afirmar conducta.
+
+**El rojo no es todo igual:** separamos supuesto informado (I5, I6, I9),
+supuesto de mecanismo (I1, I2, I7, I10), supuesto sin fuente (C1, I11) y
+supuesto ya declarado por el equipo (C2, C3). Cada grupo cuesta distinto validar.
 
 **Decisión con menos respaldo:** elegir la Pata A ("El Traductor") como núcleo del producto.
 

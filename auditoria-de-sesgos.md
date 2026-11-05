@@ -14,12 +14,20 @@
 
 ## 1. Semáforo de evidencia
 
+> **Nota de método.** Las entrevistas simuladas fueron una opción habilitada por la
+> consigna (se podía simular entrevistas o encuestas). No son un atajo del equipo ni
+> un error de proceso: es el método que se nos permitió usar en esa etapa.
+> Que una pieza quede en 🔴 **no califica al equipo, califica a la evidencia**: significa
+> que esa afirmación todavía no puede sostener una conclusión sobre conducta real.
+> La encuesta cuantitativa (20 preguntas, Anexo C) está diseñada y lista para distribuir;
+> es el instrumento que mueve estas piezas de rojo a amarillo.
+
 ### 1.1 Clasificación pieza por pieza
 
 | # | Evidencia (origen citado) | Color | Por qué |
 |---|---|---|---|
 | I1 | "El PF recibe métricas pero no sabe qué acción tomar" — §1.3 I1 | 🔴 Supusimos | El propio archivo la marca "Supuesto a validar". Viene de entrevista simulada (§1.8) |
-| I2 | "La intuición no se abandona por miedo sino por confianza" — §1.3 I2 | 🔴 Supusimos | Entrevista simulada. Nadie lo dijo ni lo hizo |
+| I2 | "La intuición no se abandona por miedo sino por confianza" — §1.3 I2 | 🔴 Supusimos | Entrevista simulada. Es una hipótesis sobre motivación: ningún PF real la enunció todavía |
 | I3 | "La conmoción es el driver #1 de adopción" — §1.3 I3 | 🟡 Dijo (parcial) | La presión regulatoria World Rugby/UAR es verificable (dato público), pero que sea el driver #1 de adopción es supuesto |
 | I4 | "En rugby la decisión es con contacto o sin contacto" — §1.3 I4 | 🟡 Dijo | Es conocimiento de dominio razonable, pero no hay registro de un PF tomándola |
 | I5 | "Forwards y backs se miden con los mismos criterios" — §1.3 I5 | 🔴 Supusimos | Es la parte "se miden igual" la que no tiene registro. Que tengan demandas distintas es literatura, no nuestro research |
@@ -40,15 +48,40 @@
 
 ### 1.2 Conteo
 
-Sobre 20 piezas de evidencia clasificadas:
+Sobre **19 piezas** de evidencia clasificadas:
 
-- **Verde (hizo): 20 %** (4 piezas: M1, M2, M3, M4 — todas de mercado, **ninguna de conducta de usuario**)
-- **Amarillo (dijo): 20 %** (4 piezas: I3, I4, I8, M5)
-- **Rojo (supusimos): 60 %** (12 piezas: I1, I2, I5, I6, I7, I9, I10, I11, C1 + 3 supuestos abiertos declarados)
+| Color | Piezas | % |
+|---|---|---|
+| 🟢 **Verde (hizo)** | 4 — M1, M2, M3, M4. Todas de mercado, **ninguna de conducta de usuario** | **21 %** |
+| 🟡 **Amarillo (dijo)** | 4 — I3, I4, I8, M5 | **21 %** |
+| 🔴 **Rojo (supusimos)** | 11 — I1, I2, I5, I6, I7, I9, I10, I11, C1, más C2 y C3 | **58 %** |
+
+C2 y C3 están marcadas "✅ Honesto" en la tabla porque el equipo ya las había declarado
+como supuestos abiertos en §1.6. Eso habla bien del equipo, pero **no mejora la evidencia**:
+siguen siendo cosas que no sabemos, así que cuentan como rojas.
 
 **Conducta de usuario observada: 0 %.** No existe una sola línea en el archivo en la que un preparador físico real haya *hecho* algo frente a nosotros.
 
-### 1.3 Nuestra decisión más apoyada en amarillo o rojo
+### 1.3 El rojo no es todo del mismo tipo
+
+Once piezas en rojo serían un resultado plano si no distinguiéramos **por qué** cada una
+está ahí. Separarlas cambia qué hay que hacer con cada una:
+
+| Tipo de rojo | Piezas | Qué lo sostiene parcialmente | Qué haría falta para moverla |
+|---|---|---|---|
+| **Supuesto informado** — la afirmación tiene respaldo documental o de dominio, pero nadie de nuestro segmento la enunció ni la ejecutó | I5, I6, I9 | I5: la literatura deportiva documenta demandas fisiológicas distintas entre forwards y backs. I6: el patrón "video tarde, notas en papel, sin registro" es conocido en coaching amateur. I9: el rol de los padres como decisores está documentado en deporte formativo | Una sola observación de campo o una pregunta de la encuesta |
+| **Supuesto de mecanismo** — es una hipótesis sobre *por qué* la gente actúa así, no sobre qué hace | I1, I2, I7, I10 | Son las que explican la motivación detrás del comportamiento. Ninguna es verificable por observación directa | Entrevista real con pregunta de conducta pasada |
+| **Supuesto de contexto sin fuente** — caracterización que escribimos sin citar de dónde salió | C1, I11 | Nada. Son las más débiles de las once | Dato duro del padrón URBA / contacto con jugadores |
+| **Supuesto ya declarado por el equipo** | C2, C3 | El archivo los reconoce explícitamente en §1.6. C3 es el que puede voltear toda la Pata A | Encuesta cuantitativa (Anexo C) |
+
+**Por qué importa la distinción:** "supuesto informado" y "supuesto de contexto sin fuente"
+cuestan muy distinto de validar. C1 se resuelve con un dato público; I2 necesita una
+conversación real. Tratarlos como un bloque único de 60 % nos impediría priorizar.
+
+Lo que **no** cambia la distinción: ninguna de las doce puede sostener hoy una afirmación
+sobre conducta. Siguen todas en rojo.
+
+### 1.4 Nuestra decisión más apoyada en amarillo o rojo
 
 **La elección de la Pata A ("El Traductor") como núcleo del producto.** §4.3 dice que la evidencia más fuerte es "el vacío de mercado", que acabamos de clasificar como M5 → 🟡 (nuestra lectura, no un test). Y las 6 evidencias que §3 lista como respaldo de la Alternativa A (I1, I2, I4, I5, I8, I10) son 4 rojas y 2 amarillas.
 
@@ -197,7 +230,7 @@ Archivo: `guion-de-prueba.md`.
 
 ### Limitaciones que declaramos
 
-1. **Conducta de usuario observada: 0 %.** El 100 % de la evidencia cualitativa (I1-I11) sale de entrevistas simuladas. La encuesta cuantitativa está diseñada y no se distribuyó (§1.8).
+1. **Conducta de usuario observada: 0 %.** El 100 % de la evidencia cualitativa (I1-I11) sale de entrevistas simuladas — método habilitado por la consigna de la etapa anterior, no un atajo. La limitación no es cómo la obtuvimos, sino **hasta dónde llega**: no alcanza para afirmar nada sobre conducta real. La encuesta cuantitativa está diseñada y no se distribuyó (§1.8); es el instrumento que mueve estas piezas de rojo a amarillo.
 2. **La evidencia "más fuerte" es una interpretación.** El "vacío de mercado" (§4.3) es nuestra lectura del feature set de los competidores (M5 → 🟡), no un test de sus productos.
 3. **La señal de las dos hipótesis es autorreporte** ("reportan", "declaran"). No cambiamos el criterio; lo triangulamos con línea de base y log CSV.
 4. **Los umbrales del motor no están validados clínicamente.** `calculateRecommendation()` lo admite con tres `[PENDIENTE]` (L737-739) y la interfaz los muestra igual, con autoridad. Se declara en pantalla, en el consentimiento y en el informe.
